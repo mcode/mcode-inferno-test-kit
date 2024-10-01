@@ -3,8 +3,8 @@ require_relative 'mcode/patient_group'
 module MCODE
   class Suite < Inferno::TestSuite
     id :mcode_test_suite
-    title 'Inferno Template Test Suite'
-    description 'Inferno template test suite.'
+    title 'MCode Test Suite'
+    description 'MCode test suite.'
 
     # These inputs will be available to all tests in this suite
     input :url,
