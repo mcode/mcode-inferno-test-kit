@@ -1,4 +1,5 @@
 require_relative 'mcode/patient_group'
+require_relative 'mcode/primary_cancer_condition_group'
 
 module MCODE
   class Suite < Inferno::TestSuite
@@ -23,7 +24,7 @@ module MCODE
 
     # All FHIR validation requsets will use this FHIR validator
     fhir_resource_validator do
-      # igs 'identifier#version' # Use this method for published IGs/versions
+      igs 'hl7.fhir.us.mcode#3.0.0' # Use this method for published IGs/versions
       # igs 'igs/filename.tgz'   # Use this otherwise
 
       exclude_message do |message|
@@ -54,5 +55,6 @@ module MCODE
     # Tests and TestGroups can be written in separate files and then included
     # using their id
     group from: :patient_group
+    group from: :primary_cancer_condition_group
   end
 end
