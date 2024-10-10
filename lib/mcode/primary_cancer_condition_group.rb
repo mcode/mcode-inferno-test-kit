@@ -3,26 +3,44 @@ module MCODE
       title 'Primary Cancer Condition Tests'
       description 'Verify that patients have a condition within the MCode primary cancer condition value set'
       id :primary_cancer_condition_group
+
+      input :patient_id,
+            title: 'Patient ID'
+      
   
       test do
-        title 'Patient has a Condition that is a primary cancer condition'
+        title 'Patient has a Condition that is the given primary cancer condition'
         description %(
-          Verify that a Condition resource can be found that is a primary cancer condition.
+          Verify that a Condition resource can be found that has the specified code
         )
-  
-        input :patient_id,
-              title: 'Patient ID'
+
+        input :primary_cancer_condition_system,
+          title: 'Primary Cancer Condition System',
+          description: 'The coding system used by the primary cancer condition.',
+          default: 'http://snomed.info/sct'
+        input :primary_cancer_condition_code,
+          title: 'Primary Cancer Condition Code',
+          description: 'Code within the coding system to look for as the primary cancer condition'
   
         run do
           fhir_search(:condition, params: { patient: patient_id })
-          # This should verify that the bundle entries are valid MCode
+          resources = resource.entry.map { |e| e.resource }
+          has_code = resources.any? do |resource|
+            resource.code&.coding&.any? { |coding| coding.system == primary_cancer_condition_system && coding.code == primary_cancer_condition_code }
+          end
+          assert has_code, 'contains the specified code'
+        end
+      end
+
+      test do
+        title 'Conditions validate against the MCode IG'
+        description 'Validates that Conditions loaded are validated'
+
+        input :patient_id,
+          title: 'Patient ID'
+        run do
+          fhir_search(:condition, params: { patient: patient_id })
           assert_valid_bundle_entries(resource_types: ['Condition'])
-          # TODO: Check to make sure that at least one of the condtions was a
-          # primary cancer condition
-          # resource.entry.map { |e| e.resource }.each do |resource|
-          #   resource.code&.coding&.each do |coding|
-          #   end
-          # end
         end
       end
     end
