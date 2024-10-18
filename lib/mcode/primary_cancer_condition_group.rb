@@ -1,48 +1,31 @@
 module MCODE
     class PrimaryCancerConditionGroup < Inferno::TestGroup
       title 'Primary Cancer Condition Tests'
-      description 'Verify that patients have a condition within the MCode primary cancer condition value set'
+      description 'Verify Condition resources are valid MCode primary cancer conditions'
       id :primary_cancer_condition_group
 
-      input :patient_id,
-            title: 'Patient ID'
-      
-  
+      input :primary_cancer_condition_id,
+        title: 'Primary Cancer Condition FHIR ID',
+        description: 'The ID of the primary cancer condition resource being checked'
+
       test do
-        title 'Patient has a Condition that is the given primary cancer condition'
+        title 'Condition is a valid MCode primary cancer condition'
         description %(
-          Verify that a Condition resource can be found that has the specified code
+          Verify that a Condition resource matches the MCode IG for a primary cancer condition
         )
-
-        input :primary_cancer_condition_system,
-          title: 'Primary Cancer Condition System',
-          description: 'The coding system used by the primary cancer condition.',
-          default: 'http://snomed.info/sct'
-        input :primary_cancer_condition_code,
-          title: 'Primary Cancer Condition Code',
-          description: 'Code within the coding system to look for as the primary cancer condition'
   
         run do
-          fhir_search(:condition, params: { patient: patient_id })
-          resources = resource.entry.map { |e| e.resource }
-          has_code = resources.any? do |resource|
-            resource.code&.coding&.any? { |coding| coding.system == primary_cancer_condition_system && coding.code == primary_cancer_condition_code }
-          end
-          assert has_code, 'contains the specified code'
+          fhir_read(:condition, primary_cancer_condition_id)
+          assert_response_status 200
+          # Check to make sure this is a primary cancer condition
+          assert resource.meta&.profile&.include?(
+              'http://hl7.org/fhir/us/mcode/StructureDefinition/mcode-primary-cancer-condition'
+            ),
+            'Condition does not include the primary cancer condition MCode profile'
+          assert_valid_resource
         end
       end
 
-      test do
-        title 'Conditions validate against the MCode IG'
-        description 'Validates that Conditions loaded are validated'
-
-        input :patient_id,
-          title: 'Patient ID'
-        run do
-          fhir_search(:condition, params: { patient: patient_id })
-          assert_valid_bundle_entries(resource_types: ['Condition'])
-        end
-      end
     end
   end
   
