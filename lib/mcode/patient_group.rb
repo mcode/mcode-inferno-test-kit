@@ -1,7 +1,7 @@
 module MCODE
   class PatientGroup < Inferno::TestGroup
     title 'Patient Tests'
-    description 'Verify that the server makes Patient resources available'
+    description 'Verify that a Patient resource matches the MCode IG'
     id :patient_group
 
     test do
