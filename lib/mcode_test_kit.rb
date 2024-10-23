@@ -1,5 +1,8 @@
 require_relative 'mcode/patient_group'
 require_relative 'mcode/primary_cancer_condition_group'
+require_relative 'mcode/cancer_disease_status_group'
+require_relative 'mcode/tnm_staging_group'
+require_relative 'mcode/tumor_marker_group'
 
 module MCODE
   class Suite < Inferno::TestSuite
@@ -56,5 +59,8 @@ module MCODE
     # using their id
     group from: :patient_group
     group from: :primary_cancer_condition_group
+    group from: :cancer_disease_status_group
+    group from: :tnm_staging_group
+    group from: :tumor_marker_group
   end
 end

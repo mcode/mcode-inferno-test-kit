@@ -1,7 +1,6 @@
-# Inferno Template Test Kit
+# MCode Inferno Test Kit
 
-Inferno template [Inferno](https://github.com/inferno-community/inferno-core) Test Kit
-for FHIR testing.
+[Inferno](https://github.com/inferno-community/inferno-core) Test Kit for testing FHIR resources meet the MCode IG.
 
 ## Instructions for Developing Your Test Kit
 
@@ -14,6 +13,26 @@ More information about what is included in this repository can be [found here](h
 - [Inferno documentation](https://inferno-framework.github.io/docs/)
 - [Ruby API documentation](https://inferno-framework.github.io/inferno-core/docs/)
 - [JSON API documentation](https://inferno-framework.github.io/inferno-core/api-docs/)
+
+## Developing
+
+When developing tests, Docker Compose's "watch" mode may be useful. This can be used either by running:
+
+```sh
+docker compose up --watch
+```
+
+Or by running the existing `./run.sh` script in one terminal and then:
+
+```sh
+docker compose watch
+```
+
+In another. Note that sometimes you may get a "Bad Gateway" message after a reload. In that case, in yet another terminal, run:
+
+```sh
+docker compose restart nginx
+```
 
 ## Example Inferno Test Kits
 
