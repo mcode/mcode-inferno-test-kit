@@ -28,7 +28,11 @@ Or by running the existing `./run.sh` script in one terminal and then:
 docker compose watch
 ```
 
-In another.
+In another. Note that sometimes you may get a "Bad Gateway" message after a reload. In that case, in yet another terminal, run:
+
+```sh
+docker compose restart nginx
+```
 
 ## Example Inferno Test Kits
 
