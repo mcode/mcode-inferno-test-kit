@@ -10,14 +10,16 @@ module MCODE
     input :patient_id,
           title: 'Patient ID'
 
-    test do
-      title 'Patient has TNM staging information'
-      description %(
-        Find TNM staging information
-      )
+    {
+      "T staging": TNM_T_CODES,
+      "N staging": TNM_N_CODES,
+      "M staging": TNM_M_CODES,
+    }.each do |name, codes|
+      test do
+        title "Patient has #{name} information"
+        description "Find #{name} information"
 
-      run do
-        [ TNM_T_CODES, TNM_N_CODES, TNM_M_CODES ].each do |codes|
+        run do
           total = 0
           codes.each do |code|
             fhir_search(:observation, params: { patient: patient_id, code: "#{SYSTEM_SNOMED}|#{code}" })
